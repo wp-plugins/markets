@@ -28,6 +28,8 @@ if(!class_exists('Markets_Extensions')) {
 
 			add_action( 'wp_ajax_markets_sync_'. $this->plugin_slug, array(&$this, 'sync') );
 			add_action( 'wp_ajax_markets_restore_'. $this->plugin_slug, array(&$this, 'restore') );
+			add_action( 'wp_ajax_markets_delete_'. $this->plugin_slug, array(&$this, 'delete') );
+			add_action( 'wp_ajax_markets_download_'. $this->plugin_slug, array(&$this, 'download') );
 		}
 
 		/**
@@ -95,11 +97,28 @@ if(!class_exists('Markets_Extensions')) {
 			global $markets;
 			$settings = $markets->get_settings();
 			if($this->is_active()){
-				
+				$wordpress_key = Markets_Api::get_wp_key();
+				$marketid = $settings['config']['id'];
+				$marketkey = $settings['config']['key'];
 			}
 			header('Content-type: application/json; charset=utf-8');
 			echo Markets_Api::array_to_json($response);
 			exit();
+		}
+
+		/**
+		 * Delete from server
+		 */
+		function delete(){
+			check_ajax_referer( $this->plugin_slug.'_markets_nonce', 'security' );
+		}
+
+		/**
+		 * Download from server
+		 *
+		 */
+		function download(){
+			check_ajax_referer( $this->plugin_slug.'_markets_nonce', 'security' );
 		}
 
 		function get_data(){

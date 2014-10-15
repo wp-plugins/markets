@@ -362,6 +362,7 @@ if(!class_exists('Markets_Admin')) {
 				wp_die(__('Please login or register for an account first.','markets'));
 			}
 			$settings = $markets->get_settings();
+			$plugins = $settings['plugins'];
 			?>
 			<div class="wrap">
 				<h2><?php _e('Markets Settings','markets'); ?></h2>
@@ -372,6 +373,40 @@ if(!class_exists('Markets_Admin')) {
 					</p>
 				</div>
 				<br/><br/><br/>
+				<table class="widefat" style="width:60%">
+					<tbody>
+						<tr>
+							<td><?php _e("Export products from ","markets");?></td>
+							<td>
+								<select class="from_market marketexport">
+									<option>--<?php _e("Select ","markets");?>--</option>
+									<?php 
+										foreach ($plugins as $key => $value) {
+											if(is_plugin_active($value['file'])){
+												?><option value="<?php echo $key; ?>" id="<?php echo $key; ?>"><?php echo  $value['name'];?></option><?php
+											}
+										}
+									?>
+								</select>
+							</td>
+							<td><?php _e(" To ","markets");?></td>
+							<td>
+								<select class="to_market marketexport">
+									<option>--<?php _e("Select ","markets");?>--</option>
+									<?php 
+										foreach ($plugins as $key => $value) {
+											if(is_plugin_active($value['file'])){
+												?><option value="<?php echo $key; ?>" id="<?php echo $key; ?>"><?php echo  $value['name'];?></option><?php
+											}
+										}
+									?>
+								</select>
+							</td>
+							<td><button class='button-primary' ><?php _e("Apply","markets");?></button></td>
+						</tr>
+					</tbody>
+				</table>
+				<br/>
 				<table class="widefat">
 					<thead>
 						<tr>
@@ -381,7 +416,7 @@ if(!class_exists('Markets_Admin')) {
 					</thead>
 					<tbody>
 						<?php
-							$plugins = $settings['plugins'];
+							
 							foreach ($plugins as $key => $value) {
 								$active = "";
 								$active_text = "";
@@ -409,6 +444,9 @@ if(!class_exists('Markets_Admin')) {
 						});
 						jQuery("button.market-restore").on('click', function(e) {
 							markets.restore(jQuery(this));
+						});
+						jQuery("select.marketexport" ).change(function() {
+							markets.filter(jQuery(this));
 						});
 					});
 				</script>

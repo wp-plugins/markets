@@ -9,6 +9,21 @@ var markets = {
 		jQuery('.'+id).show();
 	},
 
+	filter : function(elem){
+		var selected = jQuery(elem).val();
+		jQuery(".from_market option").each(function(){
+			jQuery(this).show();
+		});
+		jQuery(".to_market option").each(function(){
+			jQuery(this).show();
+		});
+		if(jQuery(elem).hasClass("from_market")){
+			jQuery(".to_market option[value=" + selected + "]").hide();
+		}else{
+			jQuery(".from_market option[value=" + selected + "]").hide();
+		}
+	},
+
 	/**
 	 * Restore
 	 */
