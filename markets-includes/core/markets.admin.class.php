@@ -429,7 +429,7 @@ if(!class_exists('Markets_Admin')) {
 								<tr>
 									<td><?php echo $value['name'].$active_text; ?></td>
 									<td>
-										<button class='button-primary market-sync' data-slug="<?php echo $key; ?>" data-nonce="<?php echo $ajax_nonce; ?>" <?php echo $active; ?> ><?php _e("Sync Products","markets");?></button>&nbsp;&nbsp;<button class='button-primary market-restore' data-slug="<?php echo $key; ?>" data-nonce="<?php echo $ajax_nonce; ?>" <?php echo $active; ?>><?php _e("Download Products","markets");?></button>
+										<button class='button-primary market-sync' data-slug="<?php echo $key; ?>" data-nonce="<?php echo $ajax_nonce; ?>" <?php echo $active; ?> ><?php _e("Sync Products","markets");?></button>&nbsp;&nbsp;<button class='button-primary market-restore' data-slug="<?php echo $key; ?>" data-nonce="<?php echo $ajax_nonce; ?>" <?php echo $active; ?>><?php _e("Restore Products","markets");?></button>&nbsp;&nbsp;<button class='button-primary market-download' data-slug="<?php echo $key; ?>" data-nonce="<?php echo $ajax_nonce; ?>" <?php echo $active; ?>><?php _e("Download Products","markets");?></button>
 									</td>
 								</tr>
 								<?php

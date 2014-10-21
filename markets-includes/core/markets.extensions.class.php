@@ -25,6 +25,8 @@ if(!class_exists('Markets_Extensions')) {
 
 			//Initialise
 			$this->init();
+			
+			add_action('save_post', array(&$this,'updated_ids'));
 
 			add_action( 'wp_ajax_markets_sync_'. $this->plugin_slug, array(&$this, 'sync') );
 			add_action( 'wp_ajax_markets_restore_'. $this->plugin_slug, array(&$this, 'restore') );
@@ -63,18 +65,20 @@ if(!class_exists('Markets_Extensions')) {
 		function sync(){
 			check_ajax_referer( $this->plugin_slug.'_markets_nonce', 'security' );
 			$response = array();
+			
 			$response["message"] = __("Error Syncing. Please try again later","markets");
 			global $markets;
 			$settings = $markets->get_settings();
 			if($this->is_active()){
 				$data = $this->get_data();
 				if(!empty($data)){
+					$total = count($data);
 					$wordpress_key = Markets_Api::get_wp_key();
 					$marketid = $settings['config']['id'];
 					$marketkey = $settings['config']['key'];
 					$market = Markets_Api::post("market/sync/$marketid/$marketkey/$wordpress_key", array('products' => Markets_Api::array_to_json($data)));
 					if($market['success']){
-						$response["message"] = __("Products synced","markets");
+						$response["message"] = __("$total Products synced","markets");
 					}
 				}else{
 					$response["message"] = __("No products found to sync","markets");
@@ -82,6 +86,7 @@ if(!class_exists('Markets_Extensions')) {
 			}else{
 				$response["message"] = __("Plugin is not active","markets");
 			}
+			$response["message"] .= " ." . $this->update_products();
 			header('Content-type: application/json; charset=utf-8');
 			echo Markets_Api::array_to_json($response);
 			exit();
@@ -122,28 +127,81 @@ if(!class_exists('Markets_Extensions')) {
 		}
 
 		function get_data(){
+			global $wpdb;
+			global $markets;
+			
+			$settings = $markets->get_settings();
+			$last_post_id = 0;
+			$latest_id = $settings['plugins'][$this->plugin_slug]['latest_id'];
+			if(!empty($latest_id)){
+				$last_post_id = $latest_id;
+			}
+			
+			
+			$sql = "SELECT * FROM $wpdb->posts
+					WHERE $wpdb->posts.post_status = 'publish'
+					AND $wpdb->posts.post_type = '$this->post_type'
+					AND ID > $last_post_id 
+					ORDER BY post_date DESC";
 			$data = array();
-			add_filter( 'posts_where', array(&$this,'filter_since_id'));
-			$args = array(
-				'order' => 'ASC',
-				'numberposts'       => -1,
-				'post_type'        => $this->post_type);
-			$posts_array = get_posts( $args );
+							
+			$posts_array = $wpdb->get_results($sql);
+			
 			if (is_array($posts_array) && count($posts_array) > 0) {
 				$last_id = 0;
 				foreach ($posts_array as $product) {
-					$product = array("id");
 					$data[] = $this->product_json($product);
 					$last_id = $product->ID;
 				}
-				global $markets;
-				$settings = $markets->get_settings();
 				$settings['plugins'][$this->plugin_slug]['latest_id'] = $last_id;
 				$markets->save_settings($settings);
 			}
-			remove_filter( 'posts_where', array(&$this,'filter_since_id'));
 
 			return $data;
+		}
+		
+		/**
+		 * Update products
+		 */
+		function update_products(){
+			$response = array();
+			$response["message"] = __(" No products updated","markets");
+			global $wpdb;
+			global $markets;
+			$settings = $markets->get_settings();
+			$updated_ids = $settings['plugins'][$this->plugin_slug]['updated_ids'];
+			if(!empty($updated_ids)){
+				$updated_ids = implode(",",$updated_ids);
+				$sql = "SELECT * FROM $wpdb->posts
+						WHERE $wpdb->posts.post_status = 'publish'
+						AND $wpdb->posts.post_type = '$this->post_type'
+						AND ID IN ($updated_ids) 
+						ORDER BY post_date DESC";
+				$data = array();
+								
+				$posts_array = $wpdb->get_results($sql);
+
+				if (is_array($posts_array) && count($posts_array) > 0) {
+					$data = array();
+					foreach ($posts_array as $product) {
+						$data[] = $this->product_json($product);
+					}
+					if(!empty($data)){
+						$total = count($data);
+						$wordpress_key = Markets_Api::get_wp_key();
+						$marketid = $settings['config']['id'];
+						$marketkey = $settings['config']['key'];
+						$market = Markets_Api::post("market/update/$marketid/$marketkey/$wordpress_key", array('products' => Markets_Api::array_to_json($data)));
+						if($market['success']){
+							unset($settings['plugins'][$this->plugin_slug]['updated_ids']);
+							$settings['plugins'][$this->plugin_slug]['updated_ids'] = array();
+							$markets->save_settings($settings);
+							$response["message"] = __(" $total Products updated","markets");
+						}
+					}
+				}
+			}
+			return $response['message'];
 		}
 
 
@@ -159,17 +217,16 @@ if(!class_exists('Markets_Extensions')) {
 		function get_price($id){
 			return get_post_meta($id, 'price', true);
 		}
-
-
-		function filter_since_id($where = ''){
+		
+		/**
+		 * Get the updated products so we update them
+		 *
+		 */
+		function updated_ids($post_id){
 			global $markets;
 			$settings = $markets->get_settings();
-			$latest_id = $settings['plugins'][$this->plugin_slug]['latest_id'];
-			if(!empty($latest_id)){
-				$where .= " AND ID > $latest_id";
-			}
-		    
-		    return $where;
+			$settings['plugins'][$this->plugin_slug]['updated_ids'][] = $post_id;
+			$markets->save_settings($settings);
 		}
 	}
 }

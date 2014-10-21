@@ -11,7 +11,7 @@ Text Domain: markets
 
 //Lets define constants
 define('MARKETS_PLUGIN_BASENAME',plugin_basename(__FILE__));
-define('MARKETS_PLUGIN_URL', WP_PLUGIN_URL.'/'.dirname(plugin_basename(__FILE__)));
+define('MARKETS_PLUGIN_URL', plugin_dir_url(__FILE__));
 define('MARKETS_PLUGIN_DIR', WP_PLUGIN_DIR.'/'.dirname(plugin_basename(__FILE__)));
 
 define('MARKETS_URL', MARKETS_PLUGIN_URL.'/markets-includes');
