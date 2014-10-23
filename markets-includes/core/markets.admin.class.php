@@ -24,7 +24,8 @@ if(!class_exists('Markets_Admin')) {
 			wp_enqueue_script('markets_js', MARKETS_URL.'/js/script.js', array('jquery'), '', false);
 			wp_enqueue_script("markets_js");
 			wp_localize_script( 'markets_js', 'mrkts', array( 
-				'processing' => __("Processing. Please wait", "markets")
+				'processing' => __("Processing. Please wait", "markets"),
+				'delete_confirm' => __("This will delete all products in this plugin", "markets")
 			) );
 		}
 

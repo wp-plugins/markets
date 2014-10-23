@@ -98,13 +98,51 @@ if(!class_exists('Markets_Extensions')) {
 		 */
 		function restore(){
 			check_ajax_referer( $this->plugin_slug.'_markets_nonce', 'security' );
-			$response = array("message" => __("Not yet implemented","markets"));
+			$response = array("message" => __("An error occured. Please try again in afew minutes","markets"));
 			global $markets;
 			$settings = $markets->get_settings();
 			if($this->is_active()){
 				$wordpress_key = Markets_Api::get_wp_key();
 				$marketid = $settings['config']['id'];
 				$marketkey = $settings['config']['key'];
+
+				//We first check if the user has posts to be pulled before we delete.
+
+				$saved_products = Markets_Api::post("market/restore/$marketid/$marketkey/$wordpress_key");
+				if($saved_products){
+					if(is_array($saved_products) && count($saved_products) > 0){
+						//We first clear the old custom posts
+						$products = get_posts(array('post_type' => $this->post_type , 'posts_per_page' => '-1'));
+						if (is_array($products) && count($products) > 0) {
+							if($products){
+								foreach ($products as $product) {
+									wp_delete_post( $product->ID, TRUE );
+								}
+							}
+						}
+						$count = 0;
+						$saved_products = $saved_products['products'];
+						foreach($saved_products as $saved_product){
+							 $post_data = array(
+										'import_id' => substr($saved_product['id'], strlen($this->plugin_id)),
+										'post_title' => $saved_product['name'],
+										'post_content' => $saved_product['description'],
+										'post_status' => 'publish',
+										'post_type' => $this->post_type
+										);
+							$new_post_id = wp_insert_post($post_data);
+							if ($new_post_id) {
+								update_post_meta($new_post_id, 'price', $saved_product['price']);
+								$count++;
+							}
+						}
+						$response["message"] = __("$count Products restored","markets");						
+					}
+				}else{
+					$response["message"] = __("No products have been saved on the server. Please do a sync before restoring","markets");
+				}
+
+				
 			}
 			header('Content-type: application/json; charset=utf-8');
 			echo Markets_Api::array_to_json($response);

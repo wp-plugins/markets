@@ -28,16 +28,19 @@ var markets = {
 	 * Restore
 	 */
 	restore : function(elem){
-		jQuery("div.process_status").html(mrkts.processing);
-		var plugin_slug = jQuery(elem).attr("data-slug");
-		var security = jQuery(elem).attr("data-nonce");
-		var data = {
-			action: 'markets_restore_'+plugin_slug,
-			security: security
-		};
-		jQuery.post(ajaxurl, data, function(response) {
-			jQuery("div.process_status").html(response.message);
-		});
+		var r = confirm(mrkts.delete_confirm);
+		if (r == true) {
+			jQuery("div.process_status").html(mrkts.processing);
+			var plugin_slug = jQuery(elem).attr("data-slug");
+			var security = jQuery(elem).attr("data-nonce");
+			var data = {
+				action: 'markets_restore_'+plugin_slug,
+				security: security
+			};
+			jQuery.post(ajaxurl, data, function(response) {
+				jQuery("div.process_status").html(response.message);
+			});
+		}
 	},
 
 	/**
