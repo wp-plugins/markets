@@ -4,7 +4,7 @@ Tags: e-commerce, ecommerce, sync
 
 Requires at least: 3.0
 Tested up to: 4.0
-Stable tag: 1.0
+Stable tag: 1.0.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -36,9 +36,20 @@ There are still many more features we are working on that are yet to come:
 
 Very secure. All your data is only accessible via an api key that you posses, unless you choose to share it
 
+= Syncing Products =
+
+This allows you to back up and update your products to our API.
+
+= Restoring Products =
+
+We will restore the products in our API to your WordPress installation. It will delete all products for the specific plugin and restore them with the last sync you did
+
 
 
 == Changelog ==
+
+= 1.0.1 =
+Syncing and restoring products sorted
 
 = 1.0 =
 Markets is brand new.  As such you won't be upgrading but joining our handsomely awesome family. We will be upgrading and fixes bugs as we improve the plugin
