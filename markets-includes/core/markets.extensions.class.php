@@ -108,7 +108,7 @@ if(!class_exists('Markets_Extensions')) {
 
 				//We first check if the user has posts to be pulled before we delete.
 
-				$saved_products = Markets_Api::post("market/restore/$marketid/$marketkey/$wordpress_key");
+				$saved_products = Markets_Api::post("market/restore/$marketid/$marketkey/$wordpress_key", array('slug' => $this->plugin_id));
 				if($saved_products){
 					if(is_array($saved_products) && count($saved_products) > 0){
 						//We first clear the old custom posts

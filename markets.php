@@ -2,7 +2,7 @@
 /*
 Plugin Name: Markets
 Description: Markets is an e-commerce plugin that allows you to sync your products. The markets API manages all your products in the database allowing you to sync your products on the supported e-commerce extensions . The Markets plugin allows you to sync products across supported e-commerce plugins and import them into other plugins activated in your WordPress installation. This allows you to try out and share products across different e-commerce WordPress plugins
-Version: 1.0.1
+Version: 1.0.2
 Author: rixeo
 Author URI: http://thebunch.co.ke/
 Plugin URI: http://markets.thebunch.co.ke/
