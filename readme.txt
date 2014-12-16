@@ -3,8 +3,8 @@ Contributors: rixeo
 Tags: e-commerce, ecommerce, sync, product-sync, dukapress sync, dukagate sync, marketpress sync
 
 Requires at least: 3.0
-Tested up to: 4.0
-Stable tag: 1.0.2
+Tested up to: 4.1
+Stable tag: 1.0.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -47,6 +47,10 @@ We will restore the products in our API to your WordPress installation. It will 
 
 
 == Changelog ==
+
+= 1.0.3 =
+
+Added MarketPress sync
 
 = 1.0.2 =
 
