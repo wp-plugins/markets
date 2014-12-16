@@ -1,6 +1,6 @@
 === Markets ===
 Contributors: rixeo
-Tags: e-commerce, ecommerce, sync, dukapress sync, dukagate sync
+Tags: e-commerce, ecommerce, sync, product-sync, dukapress sync, dukagate sync, marketpress sync
 
 Requires at least: 3.0
 Tested up to: 4.0

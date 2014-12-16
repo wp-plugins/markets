@@ -4,7 +4,7 @@ if(!class_exists('Markets_Extensions')) {
 
 	class Markets_Extensions{
 
-		//Name of the plugin.
+		//Name of the plugin. Should follow {name}_Markets as per the class
 		var $plugin_name = '';
 		
 		//shortname of plugin
@@ -132,7 +132,7 @@ if(!class_exists('Markets_Extensions')) {
 										);
 							$new_post_id = wp_insert_post($post_data);
 							if ($new_post_id) {
-								update_post_meta($new_post_id, 'price', $saved_product['price']);
+								$this->set_price($new_post_id, $saved_product['price']);
 								$count++;
 							}
 						}
@@ -164,6 +164,14 @@ if(!class_exists('Markets_Extensions')) {
 			check_ajax_referer( $this->plugin_slug.'_markets_nonce', 'security' );
 		}
 
+		function get_all_products(){
+			$products = get_posts(array('post_type' => $this->post_type, 'posts_per_page' => '-1'));
+		}
+
+		/**
+		 * Get Data
+		 *
+		 */
 		function get_data(){
 			global $wpdb;
 			global $markets;
@@ -254,6 +262,10 @@ if(!class_exists('Markets_Extensions')) {
 
 		function get_price($id){
 			return get_post_meta($id, 'price', true);
+		}
+
+		function set_price($id, $price){
+			update_post_meta($id, 'price', $price);
 		}
 		
 		/**
