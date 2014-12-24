@@ -4,13 +4,16 @@ Tags: e-commerce, ecommerce, sync, product-sync, dukapress sync, dukagate sync, 
 
 Requires at least: 3.0
 Tested up to: 4.1
-Stable tag: 1.0.3
+Stable tag: 1.0.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
 Markets is an open source e-commerce sync solution built for Wordpress.
 
 == Description ==
+
+Plugin development stoped and sync service stopped.
+
 
 Markets is a plugin that allows you to sync your products. The markets API manages all your products in the database allowing you to sync your products on the supported e-commerce extensions . The Markets plugin allows you to sync products across supported e-commerce plugins and import them into other plugins activated in your WordPress installation. This allows you to try out and share products across different e-commerce WordPress plugins. 
 
@@ -47,6 +50,11 @@ We will restore the products in our API to your WordPress installation. It will 
 
 
 == Changelog ==
+
+= 1.0.4 =
+
+Stopped development of this plugin no positive response
+
 
 = 1.0.3 =
 
